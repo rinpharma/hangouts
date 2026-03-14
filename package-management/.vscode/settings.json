@@ -1,0 +1,7 @@
+{
+  "cSpell.ignorePaths": [
+    "example_rv/rproject.toml",
+    "example_renv/renv.lock",
+    "**/*.R"
+  ]
+}
