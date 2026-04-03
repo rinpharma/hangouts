@@ -1,5 +1,7 @@
 # Package Management in R
 
+🎮 [Recording](https://rinpharma.com/docs/hangout/recordings/package_management/) now available! 
+
 A foundational strength of the R language is the vast ecosystem of packages available that cover a wide array of statistical analysis techniques, data processing, innovative web application development, and much more. With the increased importance of R in the life sciences industry, it is more important than ever to have effective tools for managing these packages. In this edition of the [R/Pharma](https://rinpharma.com) Hangout sessions, we take a deeper look at popular package management tools in R with a panel of the tool authors and industry experts to share best practices and advice for adopting these frameworks for your next project.
 
 ## Goals of the Session
