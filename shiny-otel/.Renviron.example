@@ -1,0 +1,10 @@
+ANTHROPIC_API_KEY=changeme
+
+# Enable OpenTelemetry by setting Collector environment variables
+OTEL_TRACES_EXPORTER=http
+OTEL_LOGS_EXPORTER=http
+OTEL_LOG_LEVEL=debug
+OTEL_METRICS_EXPORTER=http
+
+OTEL_EXPORTER_OTLP_ENDPOINT="https://changeme.dev"
+OTEL_EXPORTER_OTLP_HEADERS="Authorization=changeme"

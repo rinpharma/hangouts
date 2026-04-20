@@ -8,16 +8,20 @@ rix(
     "shiny",
     "bsicons",
     "dplyr",
-    "duckdb",
-    "querychat",
-    "ellmer",
+    "shinychat",
     "random.cdisc.data",
+    "otel",
     "otelsdk",
     "plotly",
     "reactable",
     "pins"
   ),
   #system_pkgs = "quarto",
+  git_pkgs = list(
+    package_name = "ellmer",
+    repo_url = "https://github.com/tidyverse/ellmer",
+    commit = "35659d1d169c31eaa5908a234ebc3b2b2bc145dd"
+  ),
   ide = "none",
   overwrite = TRUE
 )
