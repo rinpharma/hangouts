@@ -1,3 +1,4 @@
+# Chat interface API key
 ANTHROPIC_API_KEY=changeme
 
 # Enable OpenTelemetry by setting Collector environment variables
@@ -6,5 +7,10 @@ OTEL_LOGS_EXPORTER=http
 OTEL_LOG_LEVEL=debug
 OTEL_METRICS_EXPORTER=http
 
+# example configuration for logfire
 OTEL_EXPORTER_OTLP_ENDPOINT="https://changeme.dev"
 OTEL_EXPORTER_OTLP_HEADERS="Authorization=changeme"
+
+# example configuration for otel-desktop-viewer
+# change the URL to match your system
+OTEL_EXPORT_OTLP_ENDPOINT="http://localhost:8000"
