@@ -144,6 +144,7 @@ kpi_ui <- function(id) {
 
 kpi_server <- function(id, filtered_df) {
   moduleServer(id, function(input, output, session) {
+    otel::start_local_active_span(name = "kpi server span")
     output$n_subjects <- renderText({
       spn <- otel::start_local_active_span("kpi_render_n_subjects")
       n <- nrow(filtered_df())
@@ -637,68 +638,69 @@ server <- function(input, output, session) {
   })
 
   # ---- Unified filtered data reactive ---------------------------------------
+  withOtelCollect("none", {
+    filtered_df <- reactive({
+      otel::start_local_active_span("compute_filtered_df")
 
-  filtered_df <- reactive({
-    spn <- otel::start_local_active_span("compute_filtered_df")
+      d <- adsl
 
-    d <- adsl
+      # Apply manual filters
+      selected_arms <- input$filter_arm
+      selected_sex <- input$filter_sex
+      age_bounds <- input$filter_age
+      saffl_only <- input$filter_saffl
 
-    # Apply manual filters
-    selected_arms <- input$filter_arm
-    selected_sex <- input$filter_sex
-    age_bounds <- input$filter_age
-    saffl_only <- input$filter_saffl
+      if (!is.null(selected_arms) && length(selected_arms) > 0) {
+        d <- d |> filter(ARM %in% selected_arms)
+      }
+      if (!is.null(age_bounds)) {
+        d <- d |> filter(AGE >= age_bounds[1], AGE <= age_bounds[2])
+      }
+      if (!is.null(selected_sex) && length(selected_sex) > 0) {
+        d <- d |> filter(SEX %in% selected_sex)
+      }
+      if (isTRUE(saffl_only)) {
+        d <- d |> filter(SAFFL == "Y")
+      }
 
-    if (!is.null(selected_arms) && length(selected_arms) > 0) {
-      d <- d |> filter(ARM %in% selected_arms)
-    }
-    if (!is.null(age_bounds)) {
-      d <- d |> filter(AGE >= age_bounds[1], AGE <= age_bounds[2])
-    }
-    if (!is.null(selected_sex) && length(selected_sex) > 0) {
-      d <- d |> filter(SEX %in% selected_sex)
-    }
-    if (isTRUE(saffl_only)) {
-      d <- d |> filter(SAFFL == "Y")
-    }
+      # Apply chat-driven filter (if any)
+      chat_expr <- chat_filter_expr()
+      if (!is.null(chat_expr)) {
+        tryCatch(
+          {
+            d <- d |> filter(!!chat_expr)
+          },
+          error = function(e) {
+            otel::log_warn(
+              "Chat filter expression failed during reactive eval",
+              error = conditionMessage(e)
+            )
+          }
+        )
+      }
 
-    # Apply chat-driven filter (if any)
-    chat_expr <- chat_filter_expr()
-    if (!is.null(chat_expr)) {
-      tryCatch(
-        {
-          d <- d |> filter(!!chat_expr)
-        },
-        error = function(e) {
-          otel::log_warn(
-            "Chat filter expression failed during reactive eval",
-            error = conditionMessage(e)
-          )
-        }
+      # Record metrics about the result
+      n_rows <- nrow(d)
+      otel::gauge_record("filter.result.row_count", n_rows)
+      otel::histogram_record("filter.result.rows", n_rows)
+
+      # Count active manual filters
+      n_active_filters <- sum(
+        !setequal(selected_arms %||% all_arms, all_arms),
+        !identical(age_bounds, age_range),
+        !setequal(selected_sex %||% all_sexes, all_sexes),
+        isTRUE(saffl_only),
+        !is.null(chat_expr)
       )
-    }
+      otel::gauge_record("filter.active.count", n_active_filters)
 
-    # Record metrics about the result
-    n_rows <- nrow(d)
-    otel::gauge_record("filter.result.row_count", n_rows)
-    otel::histogram_record("filter.result.rows", n_rows)
+      otel::log(
+        "Filtered data computed",
+        attributes = list(rows = n_rows, active_filters = n_active_filters)
+      )
 
-    # Count active manual filters
-    n_active_filters <- sum(
-      !setequal(selected_arms %||% all_arms, all_arms),
-      !identical(age_bounds, age_range),
-      !setequal(selected_sex %||% all_sexes, all_sexes),
-      isTRUE(saffl_only),
-      !is.null(chat_expr)
-    )
-    otel::gauge_record("filter.active.count", n_active_filters)
-
-    otel::log(
-      "Filtered data computed",
-      attributes = list(rows = n_rows, active_filters = n_active_filters)
-    )
-
-    d
+      d
+    })
   })
 
   # ---- Build display title from active filters ------------------------------
