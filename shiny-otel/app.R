@@ -30,7 +30,7 @@ library(random.cdisc.data)
 # Set tracer name for this application — used as the "scope" in all otel calls
 otel_tracer_name <- "shiny.adsl.explorer"
 
-otel::log_info("Application starting", app = "adsl-explorer")
+otel::log("Application starting", attributes = list(app = "adsl-explorer"))
 
 # ---- Data -------------------------------------------------------------------
 
@@ -75,7 +75,10 @@ adsl <- random.cdisc.data::cadsl |>
   ) |>
   mutate(across(where(is.factor), as.character))
 
-otel::log_info("Data loaded", rows = nrow(adsl), cols = ncol(adsl))
+otel::log(
+  "Data loaded",
+  attributes = list(rows = nrow(adsl), cols = ncol(adsl))
+)
 
 # Pre-compute values for filter controls
 all_arms <- sort(unique(adsl$ARM))
@@ -197,7 +200,10 @@ table_server <- function(id, filtered_df, current_title) {
         attributes = otel::as_attributes(list(rows = nrow(filtered_df())))
       )
       otel::counter_add("table.render.count", 1)
-      otel::log_debug("Rendering data table", rows = nrow(filtered_df()))
+      otel::log(
+        "Rendering data table",
+        attributes = list(rows = nrow(filtered_df()))
+      )
 
       reactable(
         filtered_df(),
@@ -431,10 +437,12 @@ server <- function(input, output, session) {
           title = title
         ))
       )
-      otel::log_info(
+      otel::log(
         "Chat filter applied",
-        filter_expr = filter_expr,
-        title = title
+        attributes = list(
+          filter_expr = filter_expr,
+          title = title
+        )
       )
       otel::counter_add("chat.tool.call.count", 1, list(tool = "filter_data"))
 
@@ -461,11 +469,6 @@ server <- function(input, output, session) {
           )
         },
         error = function(e) {
-          otel::log_warn(
-            "Chat filter failed",
-            filter_expr = filter_expr,
-            error = conditionMessage(e)
-          )
           paste0(
             "Error applying filter: ",
             conditionMessage(e),
@@ -506,7 +509,10 @@ server <- function(input, output, session) {
           query_code = query_code
         ))
       )
-      otel::log_info("Chat query executed", query_code = query_code)
+      otel::log(
+        "Chat query executed",
+        attributes = list(query_code = query_code)
+      )
       otel::counter_add("chat.tool.call.count", 1, list(tool = "query_data"))
 
       tryCatch(
@@ -532,11 +538,6 @@ server <- function(input, output, session) {
           }
         },
         error = function(e) {
-          otel::log_warn(
-            "Chat query failed",
-            query_code = query_code,
-            error = conditionMessage(e)
-          )
           paste0(
             "Error executing query: ",
             conditionMessage(e),
@@ -605,7 +606,10 @@ server <- function(input, output, session) {
         message_length = nchar(user_msg)
       ))
     )
-    otel::log_info("User chat message received", length = nchar(user_msg))
+    otel::log(
+      "User chat message received",
+      attributes = list(length = nchar(user_msg))
+    )
     otel::counter_add("chat.message.count", 1, list(role = "user"))
 
     # Stream the response with tool-call content rendering
@@ -689,10 +693,9 @@ server <- function(input, output, session) {
     )
     otel::gauge_record("filter.active.count", n_active_filters)
 
-    otel::log_debug(
+    otel::log(
       "Filtered data computed",
-      rows = n_rows,
-      active_filters = n_active_filters
+      attributes = list(rows = n_rows, active_filters = n_active_filters)
     )
 
     d
