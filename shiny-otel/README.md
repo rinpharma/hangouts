@@ -1,6 +1,6 @@
 # Using OpenTelemetry with Shiny applications
 
-🎥 Recording to be posted after session
+🎥 [Recording](https://rinpharma.com/docs/hangout/recordings/shiny_otel/) now available!
 
 Within life sciences, Shiny applications are a vital component to empower data science through exploratory insights, automation pipelines, clinical design, and much more. Understanding application peformance and usage patterns when deployed to production platforms can be a challenge when trying to implement custom solutions. In this edition of the [R/Pharma](https://rinpharma.com) Hangout sessions, Posit software engineer Barret Schloerke joins us to demonstrate the power of OpenTelemetry for collecting observability data inside a Shiny application and the key benefits that aid developers in production.
 
