@@ -1,0 +1,6 @@
+[submodule "rep-nix/demo_t_workflow"]
+	path = rep-nix/demo_t_workflow
+	url = git@github.com:rinpharma/demo_t_workflow.git
+[submodule "rep-nix/demo_rix"]
+	path = rep-nix/demo_rix
+	url = git@github.com:rinpharma/demo_rix.git
