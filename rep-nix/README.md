@@ -1,16 +1,33 @@
-# rep-nix
+# Reproducible Data Science with Nix
 
-Topic exploring reproducible R / data-science workflows with Nix.
+🎥 [Recording]() Pending
 
-This directory contains two sub-projects, each tracked as its own git
-repository and wired into `hangouts` as a **git submodule**:
+Ensuring reproducibility in data science workflows is paramount to the life sciences industry and beyond. A common workflow when using R or other languages such as Python is to manage package versions in a particular project with tools such as `{renv}` and `rv`, the focus of the [Package Management in R](https://rinpharma.com/docs/hangout/recordings/package_management/) session. But reproducibility in a data science environment goes beyond the R packages. Other important considerations include the system-level dependencies those packages depend on, which presents additional challanges. In this edition of the [R/Pharma](https://rinpharma.com) Hangout sessions, Bruno Rodrigues (head of the statistics department at the Ministry of Research and Higher Education in Luxembourg) joins us to showcase how the Nix package manager enables powerful capabilities to ensure reproducible environments in many levels, with a focus on the `{rix}`, `{rixpress}` and tne brand-new T language.
 
-| Submodule | Remote |
-| --- | --- |
-| `demo_t_workflow` | `git@github.com:rinpharma/demo_t_workflow.git` |
-| `demo_rix` | `git@github.com:rinpharma/demo_rix.git` |
+## Goals of the Session
 
-## Working with the submodules
+* Introduce the Nix package manager
+* Showcase how `rix}` provides a friendly wrapper to generating Nix configuration from an R session.
+* Showcasee the power of `{rixpress}` for polygot pipelines that may include not only R, but also Python and Julia.
+* Introduce the T language as a new domain-specific-language (DSL) for polygot data science
+
+## Resources
+
+* Session slides <https://b-rodrigues.github.io/repro_r_pharma/> and accompanying GitHub repository <https://github.com/b-rodrigues/repro_r_pharma/tree/main>
+* `{rix}` documentation <https://docs.ropensci.org/rix/index.html>
+* `{rixpress}` documentation <https://b-rodrigues.github.io/rixpress/>
+* T language <https://tstats-project.org/index.html>
+
+## Additional Examples
+
+Inside this directory you will find two additonal repositories (captured as Git Submodules):
+
+* [rinpharma/demo_rix](https://github.com/rinpharma/demo_rix): Using `{rix}` to manage R dependencies for Pharmaverse example R scripts.
+* [rinpharma/demo_t_workflow](https://github.com/rinpharma/demo_t_workflow): Using the T language to run a clinical simulation pipeline originally created with the `{targets}` package.
+
+If you are only interested in these example repositories, you can clone them individually to your local system. If you wish to use them within the overall `hangouts` repository, follow the instructions below:
+
+### Working with the submodules
 
 Fresh clone of `hangouts` (pulls submodule content too):
 
