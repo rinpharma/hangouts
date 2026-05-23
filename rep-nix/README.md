@@ -1,6 +1,6 @@
 # Reproducible Data Science with Nix
 
-🎥 [Recording]() Pending
+🎥 [Recording](https://rinpharma.com/docs/hangout/recordings/rep_nix/) now available!
 
 Ensuring reproducibility in data science workflows is paramount to the life sciences industry and beyond. A common workflow when using R or other languages such as Python is to manage package versions in a particular project with tools such as `{renv}` and `rv`, the focus of the [Package Management in R](https://rinpharma.com/docs/hangout/recordings/package_management/) session. But reproducibility in a data science environment goes beyond the R packages. Other important considerations include the system-level dependencies those packages depend on, which presents additional challanges. In this edition of the [R/Pharma](https://rinpharma.com) Hangout sessions, Bruno Rodrigues (head of the statistics department at the Ministry of Research and Higher Education in Luxembourg) joins us to showcase how the Nix package manager enables powerful capabilities to ensure reproducible environments in many levels, with a focus on the `{rix}`, `{rixpress}` and tne brand-new T language.
 
